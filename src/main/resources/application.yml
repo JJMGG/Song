@@ -1,0 +1,22 @@
+minio:
+  endpoint: http://169.254.1.116:9000  # MinIO 服务地址
+  access-key: minioadmin             # 访问密钥
+  secret-key: minioadmin             # 私密密钥
+  bucket-name: mysong               # 默认存储桶
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+
+server:
+  tomcat:
+    # 当文件超过tomcat的大小限制后会先于Controller触发异常，此时我们的异常处理器无法捕获异常
+    max-swallow-size: 30MB # 内嵌tomcat的最大吞吐量，设置 -1 不限制
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  auto-runtime-dialect: true
