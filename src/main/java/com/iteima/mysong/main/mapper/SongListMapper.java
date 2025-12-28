@@ -76,4 +76,7 @@ public interface SongListMapper {
 
     @Select("select * from message where message_replyer_id=#{id}  and message_isread=#{number}")
     List<Message> getflag(Integer id, String number);
+
+    @Select("select list_id,list_title,list_img  from lists where list_id=#{listId}")
+    ListVo getRecommendList(Integer listId);
 }

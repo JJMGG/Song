@@ -22,6 +22,6 @@ public class SongListVo implements Serializable {
     private String listDetails;
     private List<String> listType;
     private Long listPlaynum;
-    private List<Songs> songs;
+    private List<SongVo> songs;
     private boolean Iscollect;
 }

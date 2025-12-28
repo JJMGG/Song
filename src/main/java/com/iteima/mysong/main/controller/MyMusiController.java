@@ -39,8 +39,9 @@ public class MyMusiController {
     public Result addMusic(@RequestBody MusicDto musicDto)
     {
 
-        log.info("songid:{},userid:{}",musicDto.getSongId(),musicDto.getUserId());
-        myMusicService.addMusic(musicDto.getSongId(),musicDto.getUserId());
+        log.info("songid:{},userid:{},singerid:{}",musicDto.getSongId(),musicDto.getUserId(),musicDto.getSingerId());
+        myMusicService.addMusic(musicDto.getSongId(),musicDto.getUserId(),musicDto.getSingerId());
+
         return Result.success();
     }
 
@@ -48,7 +49,7 @@ public class MyMusiController {
     @DeleteMapping("/delmusic")
     public Result delMusic(@RequestBody MusicDto musicDto)
     {
-        myMusicService.delMusic(musicDto.getUserId(),musicDto.getSongId());
+        myMusicService.delMusic(musicDto.getUserId(),musicDto.getSongId(),musicDto.getSingerId());
         return Result.success();
     }
 
@@ -74,10 +75,17 @@ public class MyMusiController {
        List<SongListVo> list=myMusicService.getSort(type);
        return Result.success(list);
    }
+
+//   自增音乐次数
    @PutMapping("/addNumber")
     public Result addNumber(@RequestBody Map<String, Integer> request)
-   {Integer songId = request.get("songId");
-       myMusicService.addNumber(songId);
+   {    Integer songId = request.get("songId");
+        Integer userId = request.get("userId");
+        Integer singerId = request.get("singerId");
+        Integer playTime = request.get("playTime");
+
+       myMusicService.addNumber(songId,userId,playTime);
+
        return Result.success();
    }
 
@@ -90,10 +98,10 @@ public class MyMusiController {
    }
 
    @GetMapping("/search")
-   public Result<List<Songs>> serach(String name)
+   public Result<List<Songs>> serach(String name,Integer userId)
    {
        System.out.println(name+"这是搜索关键词");
-       List<Songs> list=myMusicService.serachsongs(name);
+       List<Songs> list=myMusicService.serachsongs(name,userId);
        System.out.println(list);
        return Result.success(list);
    }

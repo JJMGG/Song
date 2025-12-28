@@ -6,6 +6,7 @@ import com.iteima.mysong.pojo.Vo.MusicListVo;
 import com.iteima.mysong.pojo.Vo.RankSongVo;
 import com.iteima.mysong.pojo.Vo.SongListVo;
 import com.iteima.mysong.pojo.entity.Songs;
+import com.iteima.mysong.pojo.entity.UserMusicInteractions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -33,13 +35,32 @@ public class MyMusicServiceImpl implements MyMusicService {
     }
 
     @Override
-    public void addMusic(Integer songId, Integer userId) {
+    public void addMusic(Integer songId, Integer userId,Integer singerId) {
         myMusciMapper.addMusic(songId,userId);
+
+//        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(userId);
+        userMusicInteractions.setMusicId(songId);
+        userMusicInteractions.setActionType("like");
+        userMusicInteractions.setIsLiked(1);
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        userMusicInteractions.setSingerId(singerId);
+        myMusciMapper.addUserInteraction(userMusicInteractions);
     }
 
     @Override
-    public void delMusic(Integer userId, Integer songId) {
+    public void delMusic(Integer userId, Integer songId,Integer singerId) {
         myMusciMapper.delMusic(userId,songId);
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(userId);
+        userMusicInteractions.setMusicId(songId);
+        userMusicInteractions.setActionType("delete");
+
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        userMusicInteractions.setSingerId(singerId);
+        myMusciMapper.addUserInteraction(userMusicInteractions);
     }
 
     @Override
@@ -62,8 +83,27 @@ public class MyMusicServiceImpl implements MyMusicService {
     }
 
     @Override
-    public void addNumber(Integer songId) {
+    public void addNumber(Integer songId,Integer userId,Integer playTime) {
         myMusciMapper.addNumber(songId);
+        List<Integer> list= myMusciMapper.bySongIdGetListId(songId);
+
+        //这里对歌单点击次数进行一次自增,通过听歌时长来进行调用
+
+        for (Integer i : list) {
+            myMusciMapper.addListNumber(i);
+        }
+
+
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(userId);
+        userMusicInteractions.setMusicId(songId);
+        userMusicInteractions.setActionType("play");
+
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+
+        userMusicInteractions.setPlayDuration(playTime);
+        myMusciMapper.addUserInteraction(userMusicInteractions);
     }
 
     @Override
@@ -86,12 +126,18 @@ public class MyMusicServiceImpl implements MyMusicService {
     }
 
     @Override
-    public List<Songs> serachsongs(String name) {
+    public List<Songs> serachsongs(String name,Integer userId) {
         List<Songs> list=new ArrayList<>();
         list=myMusciMapper.serachsongs(name);
         List<Songs> Templist=serachName(name);
         list.addAll(Templist);
-
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(userId);
+        userMusicInteractions.setActionType("search");
+        userMusicInteractions.setSearchContent(name);
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        myMusciMapper.addUserInteraction(userMusicInteractions);
         return list;
     }
 

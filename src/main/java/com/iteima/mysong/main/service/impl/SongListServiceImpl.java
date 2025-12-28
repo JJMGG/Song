@@ -1,7 +1,13 @@
 package com.iteima.mysong.main.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iteima.mysong.common.Result;
+import com.iteima.mysong.main.mapper.LoginMapper;
+import com.iteima.mysong.main.mapper.MyMusciMapper;
 import com.iteima.mysong.main.mapper.SongListMapper;
+import com.iteima.mysong.main.service.MyMusicService;
 import com.iteima.mysong.main.service.SongListService;
 import com.iteima.mysong.pojo.Vo.*;
 import com.iteima.mysong.pojo.dto.CollectDto;
@@ -11,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.io.BufferedInputStream;
@@ -32,6 +39,16 @@ public class SongListServiceImpl implements SongListService {
     @Autowired
     public SongListMapper songListMapper;
 
+    @Autowired
+    public MyMusciMapper myMusciMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private LoginMapper loginMapper;
+
+
     @Override
     public SongListVo getSongList(int id,Integer userId) {
         SongList songList=new SongList();
@@ -47,9 +64,15 @@ public class SongListServiceImpl implements SongListService {
         List<Integer> list =new ArrayList<>();
         songListVo.setListType(strList);
         list=songListMapper.getSongsId(songList.getListId());
-        List<Songs> songs=new ArrayList<>();
+
+        List<SongVo> ansList=new ArrayList<>();
         for (Integer i : list) {
-            songs.add(songListMapper.getSong(i));
+            SongVo temp=new SongVo();
+            Songs song=songListMapper.getSong(i);
+            BeanUtils.copyProperties(song,temp);
+            temp.setSongSinger(loginMapper.getSingerName(song.getSongSinger()));
+            ansList.add(temp);
+
         }
         UserList userList=songListMapper.isCollect(id,userId);
         if(userList!=null)
@@ -58,19 +81,39 @@ public class SongListServiceImpl implements SongListService {
         }
         else
             songListVo.setIscollect(false);
-        songListVo.setSongs(songs);
+        songListVo.setSongs(ansList);
         return songListVo;
     }
 
     @Override
     public void AddCollect(CollectDto collectDto) {
         songListMapper.AddCollect(collectDto);
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(collectDto.getUserId());
+
+        userMusicInteractions.setActionType("collect");
+        userMusicInteractions.setIsCollected(1);
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        userMusicInteractions.setMusicListId(collectDto.getListId());
+
+        myMusciMapper.addUserInteraction(userMusicInteractions);
 
     }
 
     @Override
     public void delcollect(CollectDto collectDto) {
         songListMapper.delcollect(collectDto);
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(collectDto.getUserId());
+
+        userMusicInteractions.setActionType("collect");
+        userMusicInteractions.setIsCollected(0);
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        userMusicInteractions.setMusicListId(collectDto.getListId());
+
+        myMusciMapper.addUserInteraction(userMusicInteractions);
     }
 
     @Override
@@ -93,6 +136,18 @@ public class SongListServiceImpl implements SongListService {
         comments.setCommTime(truncatedTime);
         comments.setCommId(0);
         songListMapper.savComment(comments);
+
+        //        添加一条用户交互行为
+        UserMusicInteractions userMusicInteractions=new UserMusicInteractions();
+        userMusicInteractions.setUserId(comments.getCommUserid());
+        userMusicInteractions.setMusicId(comments.getCommTargetid());
+        userMusicInteractions.setActionType("comment");
+        userMusicInteractions.setSearchContent(comments.getCommDetails());
+        userMusicInteractions.setInteractionTime(LocalDateTime.now());
+        userMusicInteractions.setSingerId(comments.getSingerId());
+        myMusciMapper.addUserInteraction(userMusicInteractions);
+
+
         int tempCommId=songListMapper.getcommId(truncatedTime);//!!!!消息出现bug
 
         if(comments.getCommFather()!=0)
@@ -201,6 +256,45 @@ public class SongListServiceImpl implements SongListService {
             return "true";//表示有未读消息
         return "false";//表示没有未读消息
     }
+
+    @Override
+    public List<ListVo> getRecommendList(Integer userId) {
+        List<Integer> idList = new ArrayList<>();
+        try {
+            String url = "http://localhost:5000/recommend/playlist?user_id="+userId;
+            // 直接获取JSON字符串
+            String jsonResponse = restTemplate.getForObject(url, String.class);
+
+
+            // 使用Jackson解析JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+            // 提取recommendations数组中的所有id
+            JsonNode recommendations = rootNode.path("recommendations");
+
+
+            if (recommendations.isArray()) {
+                for (JsonNode recommendation : recommendations) {
+                    int id = recommendation.path("id").asInt();
+                    idList.add(id);
+                }
+            }
+
+            System.out.println("提取的ID列表: " + idList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<ListVo> list=new ArrayList<>();
+        for (Integer listId : idList) {
+          list.add(songListMapper.getRecommendList(listId));
+        }
+
+        return list;
+    }
+
+
+
 
     //将评论回复转为JSon字符发送给前端,这里的sendContent和replyContent交换了一下,其他为基础设置
     public  String tranToMessageVo(Message data)

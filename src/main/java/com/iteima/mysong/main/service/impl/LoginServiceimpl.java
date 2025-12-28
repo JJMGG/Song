@@ -5,11 +5,13 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.iteima.mysong.main.mapper.LoginMapper;
 import com.iteima.mysong.main.service.LoginService;
 import com.iteima.mysong.pojo.Vo.ListVo;
+import com.iteima.mysong.pojo.Vo.SongVo;
 import com.iteima.mysong.pojo.dto.PersonDto;
 import com.iteima.mysong.pojo.dto.Userdto;
 import com.iteima.mysong.pojo.entity.Songs;
 import com.iteima.mysong.pojo.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -63,14 +67,37 @@ public class LoginServiceimpl implements LoginService {
     }
 
     @Override
-    public List<Songs> Getsongs() {
-     return loginMapper.Getsongs();
+    public List<SongVo> Getsongs() {
+        List<SongVo> list=new ArrayList<>();
+        List<Songs> TempList=loginMapper.Getsongs();
+        for (Songs songs : TempList) {
+            SongVo temp=new SongVo();
+            BeanUtils.copyProperties(songs,temp);
+            temp.setSongSinger(loginMapper.getSingerName(songs.getSongSinger()));
+            list.add(temp);
+        }
+        return list;
     }
 
     @Override
     public List<ListVo> getList() {
-       List<ListVo>  list=loginMapper.getList();
-        return list;
+        // 获取原始列表
+        List<ListVo> list = loginMapper.getList(); // 假设这里有16条数据
+
+        // 确保原始列表不被修改，创建副本
+                List<ListVo> copyList = new ArrayList<>(list);
+
+        // 随机打乱列表顺序
+                Collections.shuffle(copyList);
+
+        // 取前8条作为随机选择
+                List<ListVo> randomList = copyList.subList(0, Math.min(8, copyList.size()));
+
+        // 如果列表少于8条，则取全部
+                if (randomList.size() < 8) {
+                    System.out.println("列表只有" + randomList.size() + "条数据，全部取出");
+                }
+        return randomList;
     }
 
     @Override

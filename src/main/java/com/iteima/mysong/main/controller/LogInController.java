@@ -8,6 +8,7 @@ import com.iteima.mysong.common.Result;
 import com.iteima.mysong.main.service.impl.LoginServiceimpl;
 import com.iteima.mysong.main.service.impl.MinioService;
 import com.iteima.mysong.pojo.Vo.ListVo;
+import com.iteima.mysong.pojo.Vo.SongVo;
 import com.iteima.mysong.pojo.Vo.UserVo;
 import com.iteima.mysong.pojo.dto.PersonDto;
 import com.iteima.mysong.pojo.dto.Userdto;
@@ -58,10 +59,10 @@ public class LogInController {
         else
         {
             String code=redisTemplate.opsForValue().get("cache:code:"+userdto.getSessionId());
-//            if(code==null)
-//                return Result.error("验证码过期");
-//            if(!code.equals(userdto.getCode()))
-//                return Result.error("验证码错误");
+            if(code==null)
+                return Result.error("验证码过期");
+            if(!code.equals(userdto.getCode()))
+                return Result.error("验证码错误");
 
             Map<String,Object> map=new HashMap<>();
             map.put(Jwt.User_Id,user.getUserId());
@@ -76,10 +77,10 @@ public class LogInController {
     }
 
     @GetMapping("/home")
-    public Result<List<Songs>> Getsongs()
+    public Result<List<SongVo>> Getsongs()
     {
-//        WsContrller.sendToClient("1");
-        List<Songs> list=new ArrayList<>();
+
+        List<SongVo> list=new ArrayList<>();
         list=loginServiceimpl.Getsongs();
         //System.out.println(list);
         return Result.success(list);
@@ -93,6 +94,9 @@ public class LogInController {
     }
 
 
+    /*
+    * 修改个人信息
+    * */
     @PutMapping("/person")
     public Result updataPerson(@RequestBody PersonDto personDto)
     {
@@ -127,6 +131,7 @@ public class LogInController {
 
     }
 
+    /*添加搜索历史*/
     @PostMapping("/history")
     public Result addHistory(@RequestBody Map<String, Object> requestBody)
     {

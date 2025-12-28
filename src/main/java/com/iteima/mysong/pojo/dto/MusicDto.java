@@ -15,4 +15,5 @@ import java.io.Serializable;
 public class MusicDto implements Serializable {
     private int userId;
     private int songId;
+    private int singerId;
 }

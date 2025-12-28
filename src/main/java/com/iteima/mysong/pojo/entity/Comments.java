@@ -18,5 +18,6 @@ public class Comments {
     private int commTargetid;
     private int commFather;
     private int commReplyid;
+    private int singerId;
 
 }

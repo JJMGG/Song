@@ -12,6 +12,7 @@ import com.iteima.mysong.pojo.entity.SongList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,12 @@ public class SongListController {
      private SongListServiceImpl songListService;
 
 
+    @GetMapping("/recommend/playlist")
+    public Result<List<ListVo>> Recommend(@RequestParam Integer userId) {
+        List<ListVo> list =songListService.getRecommendList(userId);
+
+        return Result.success(list);
+    }
 
     @GetMapping("/songList")
     public Result<SongListVo> getSongList(@RequestParam  int id,@RequestParam Integer userId)
@@ -63,6 +70,8 @@ public class SongListController {
    @PostMapping("/comment")
     public Result saveCommnet(@RequestBody Comments comments)
    {
+       System.out.println(comments);
+
        String dataTime = songListService.saveCommnet(comments);
        return  Result.success(dataTime);
    }
@@ -90,7 +99,7 @@ public class SongListController {
    }
 
     @DeleteMapping("/delMessage")
-    public Result delcollect(@RequestBody Map<String, Integer> request)
+    public Result delMessage(@RequestBody Map<String, Integer> request)
     {Integer messageId = request.get("messageId");
         songListService.delMessage(messageId);
         return Result.success();

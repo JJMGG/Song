@@ -18,4 +18,6 @@ public class PersonDto implements Serializable {
     private String sex;
     private String region;
     private String briefIntroduction;
+
+
 }

@@ -117,8 +117,8 @@ public class WsContrller {
         System.out.println("third");
         String userId = (String) session.getUserProperties().get("userId"); //从握手请求中获取token
         System.out.println("连接关闭: " + userId + ", 原因: " + closeReason.getReasonPhrase());
-        // 清理资源
-//        onlinUsers.values().removeIf(s -> s.getId().equals(userId));
+//         清理资源
+        onlinUsers.values().removeIf(s -> s.getId().equals(userId));
     }
     // 主动向客户端发送消息
     public void sendMessage(String message,String account) {

@@ -27,7 +27,7 @@ public interface LoginMapper {
             " )")
     List<Songs> Getsongs();
 
-    @Select("SELECT list_id,list_title,list_img FROM lists")
+    @Select("SELECT list_id,list_title,list_img FROM lists order by list_playnum desc limit 16")
     List<ListVo> getList();
 
 
@@ -35,4 +35,7 @@ public interface LoginMapper {
 
     @Update("update songs set song_filepath=#{s} where song_id=#{id}")
     void changeName(String s,Integer id);
+
+    @Select("select stage_name from singer where singer_id=#{songSinger}")
+    String getSingerName(Long songSinger);
 }

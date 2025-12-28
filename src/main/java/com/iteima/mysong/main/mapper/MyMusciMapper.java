@@ -4,6 +4,7 @@ import com.iteima.mysong.pojo.Vo.MusicListVo;
 import com.iteima.mysong.pojo.Vo.RankSongVo;
 import com.iteima.mysong.pojo.Vo.SongListVo;
 import com.iteima.mysong.pojo.entity.Songs;
+import com.iteima.mysong.pojo.entity.UserMusicInteractions;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -53,4 +54,15 @@ public interface MyMusciMapper {
 
     @Select("select * from songs where song_singer  in ( select user_id from user where user_name like concat('%', #{name}, '%') ) ")
     List<Songs> serachName(String name);
+
+    @Insert("insert into user_music_interactions (user_id,music_id,music_list_id,singer_id,search_content,action_type,action_value,play_duration,is_liked,is_collected,interaction_time)" +
+            "values (#{userId},#{musicId},#{musicListId},#{singerId},#{searchContent},#{actionType},#{actionValue},#{playDuration},#{isLiked},#{isCollected},#{interactionTime})")
+    void addUserInteraction(UserMusicInteractions userMusicInteractions);
+
+
+    @Select("select songlist_id from songlist where songlist_songid=#{sondId}")
+    List<Integer> bySongIdGetListId(Integer songId);
+
+    @Update("update lists set list_playnum=list_playnum+1 where list_id=#{listId}")
+    void addListNumber(Integer listId);
 }

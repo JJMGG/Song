@@ -1,5 +1,6 @@
 package com.iteima.mysong.main.service;
 
+import com.iteima.mysong.common.Result;
 import com.iteima.mysong.pojo.Vo.CommentsVo;
 import com.iteima.mysong.pojo.Vo.ListVo;
 import com.iteima.mysong.pojo.Vo.MessageVo;
@@ -38,4 +39,6 @@ public interface SongListService {
     void delMessage(Integer messageId);
 
     String getflag(Integer id);
+
+    List<ListVo> getRecommendList(Integer userId);
 }

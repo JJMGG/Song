@@ -10,9 +10,9 @@ import java.util.List;
 public interface MyMusicService {
     List<Integer> getMusic(Integer userId);
 
-    void addMusic(Integer songId, Integer userId);
+    void addMusic(Integer songId, Integer userId,Integer singerId);
 
-    void delMusic(Integer userId, Integer songId);
+    void delMusic(Integer userId, Integer songId,Integer singerId);
 
     List<Songs> getMusics(Integer id, Integer userId);
 
@@ -20,13 +20,13 @@ public interface MyMusicService {
 
     List<SongListVo> getSort(String type);
 
-    void addNumber(Integer songId);
+    void addNumber(Integer songId,Integer userId,Integer playTime);
 
     List<Songs> getRanking();
 
     void testsongs();
 
-    List<Songs> serachsongs(String name);
+    List<Songs> serachsongs(String name,Integer userId);
 
 
 }
