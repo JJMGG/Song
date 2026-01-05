@@ -11,7 +11,7 @@ public class JwtUtils {
 
     private static String Keys="fengxiang";
 
-    private static Long Time=100000000L;//时间不要设置错误了，靠北了，设置一秒过期搞得我找了好久的bug
+    private static Long Time=300000000L;//时间不要设置错误了，靠北了，设置一秒过期搞得我找了好久的bug
 
     /**
      * 生成jwt令牌

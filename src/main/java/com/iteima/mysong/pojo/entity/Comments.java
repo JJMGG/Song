@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comments {
-    private int commId;
-    private String commDetails;
-    private LocalDateTime commTime;
-    private int commUserid;
-    private int commType;
-    private int commTargetid;
-    private int commFather;
-    private int commReplyid;
-    private int singerId;
+    private int commId;     //评论id
+    private String commDetails;  //评论内容
+    private LocalDateTime commTime;   //评论时间
+    private int commUserid;     //评论的用户
+    private int commType;      //评论的类型
+    private int commTargetid;     //评论对象
+    private int commFather;     //评论的父级评论
+    private int commReplyid;    //评论的回复id
+    private int singerId;     //歌手id
 
 }

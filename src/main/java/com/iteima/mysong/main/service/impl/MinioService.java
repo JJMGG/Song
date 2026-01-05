@@ -118,7 +118,7 @@ public class MinioService implements FileStorageService {
 
             // 返回文件访问URL（需确保MinIO配置了外部访问）
             return String.format("%s/%s/%s",
-                    "http://192.168.3.226:9000", // 替换为你的MinIO服务地址
+                    "http://172.16.169.64:9000", // 替换为你的MinIO服务地址
                     bucketName,
                     objectName);
         } catch (Exception e) {

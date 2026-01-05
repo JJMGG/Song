@@ -3,6 +3,7 @@ package com.iteima.mysong.main.service;
 import com.iteima.mysong.pojo.Vo.MusicListVo;
 import com.iteima.mysong.pojo.Vo.RankSongVo;
 import com.iteima.mysong.pojo.Vo.SongListVo;
+import com.iteima.mysong.pojo.Vo.SongVo;
 import com.iteima.mysong.pojo.entity.Songs;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface MyMusicService {
 
     void delMusic(Integer userId, Integer songId,Integer singerId);
 
-    List<Songs> getMusics(Integer id, Integer userId);
+    List<SongVo> getMusics(Integer id, Integer userId);
 
      List<MusicListVo> getMusicList(Integer userId);
 
@@ -22,7 +23,7 @@ public interface MyMusicService {
 
     void addNumber(Integer songId,Integer userId,Integer playTime);
 
-    List<Songs> getRanking();
+    List<SongVo> getRanking();
 
     void testsongs();
 

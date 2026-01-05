@@ -46,36 +46,24 @@ public class UploadController {
         JSONObject singer1 = new JSONObject();
         singer1.put("id", 1);
         singer1.put("name", "周杰伦");
-
-
         JSONObject singer2 = new JSONObject();
         singer2.put("id", 2);
         singer2.put("name", "邓紫棋");
-
-
         JSONObject singer3 = new JSONObject();
         singer3.put("id", 3);
         singer3.put("name", "王菲");
-
-
         JSONObject singer4 = new JSONObject();
         singer4.put("id", 4);
         singer4.put("name", "李宇春");
-
-
         JSONObject singer5 = new JSONObject();
         singer5.put("id", 5);
         singer5.put("name", "陈奕迅");
-
-
         // 将歌手对象添加到数组
         singersArray.add(singer1);
         singersArray.add(singer2);
         singersArray.add(singer3);
         singersArray.add(singer4);
         singersArray.add(singer5);
-
-
         return Result.success(singersArray);
     }
 
@@ -89,8 +77,6 @@ public class UploadController {
         JSONObject singer1 = new JSONObject();
         singer1.put("id", 1);
         singer1.put("name", "范特西");
-
-
         JSONObject singer2 = new JSONObject();
         singer2.put("id", 2);
         singer2.put("name", "七里香");

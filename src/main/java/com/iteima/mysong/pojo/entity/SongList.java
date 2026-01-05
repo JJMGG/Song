@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongList {
-    private int listId;
-    private String  listTitle;
-    private String  listImg;
-    private int  listUserid;
-    private LocalDate listTime;
-    private String listDetails;
-    private String listType;
-    private Long listPlaynum;
+    private int listId;   //歌单id
+    private String  listTitle;  //歌单标题
+    private String  listImg; //歌单图片
+    private int  listUserid; //歌单作者
+    private LocalDate listTime;//歌单创建时间
+    private String listDetails;//歌单介绍
+    private String listType;//歌单类型
+    private Long listPlaynum;//歌单点击次数
 }

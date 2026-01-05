@@ -1,13 +1,16 @@
 package com.iteima.mysong.main.service.impl;
 
+import com.iteima.mysong.main.mapper.LoginMapper;
 import com.iteima.mysong.main.mapper.MyMusciMapper;
 import com.iteima.mysong.main.service.MyMusicService;
 import com.iteima.mysong.pojo.Vo.MusicListVo;
 import com.iteima.mysong.pojo.Vo.RankSongVo;
 import com.iteima.mysong.pojo.Vo.SongListVo;
+import com.iteima.mysong.pojo.Vo.SongVo;
 import com.iteima.mysong.pojo.entity.Songs;
 import com.iteima.mysong.pojo.entity.UserMusicInteractions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +30,8 @@ public class MyMusicServiceImpl implements MyMusicService {
     @Autowired
     private MyMusciMapper myMusciMapper;
 
-
+    @Autowired
+    private LoginMapper loginMapper;
 
     @Override
     public List<Integer> getMusic(Integer userId) {
@@ -64,9 +68,17 @@ public class MyMusicServiceImpl implements MyMusicService {
     }
 
     @Override
-    public List<Songs> getMusics(Integer id, Integer userId) {
+    public List<SongVo> getMusics(Integer id, Integer userId) {
           List<Songs> list=myMusciMapper.getMusics(id);
-        return list;
+        List<SongVo> ans=new ArrayList<>();
+
+        for (Songs songs : list) {
+            SongVo temp=new SongVo();
+            BeanUtils.copyProperties(songs,temp);
+            temp.setSongSinger(loginMapper.getSingerName(songs.getSongSinger())+"-"+songs.getSongSinger());
+            ans.add(temp);
+        }
+        return ans;
     }
 
     @Override
@@ -107,9 +119,16 @@ public class MyMusicServiceImpl implements MyMusicService {
     }
 
     @Override
-    public List<Songs> getRanking() {
+    public List<SongVo> getRanking() {
         List<Songs> list=myMusciMapper.getRanking();
-        return list;
+        List<SongVo> ans =new ArrayList<>();
+        for (Songs songs : list) {
+            SongVo temp=new SongVo();
+            BeanUtils.copyProperties(songs,temp);
+            temp.setSongSinger(loginMapper.getSingerName(songs.getSongSinger())+"-"+songs.getSongSinger());
+            ans.add(temp);
+        }
+        return ans;
     }
 
     @Override

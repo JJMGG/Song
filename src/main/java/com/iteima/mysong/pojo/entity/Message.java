@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
-    private int messageId;
-    private String messageSenderId;
-    private int messageSendCommentId;
-    private String messageAvatar;
-    private String messageSenderContent;
-    private LocalDateTime messageTime;
-    private String messageIsread;
-    private String messageType;
-    private int messageReplyerCommentId;
-    private String messageReplyerId;
-    private String messageReplyerContent;
-    private String messageIsyou;
+    private int messageId;              //消息id
+    private String messageSenderId;     //消息发送者id
+    private int messageSendCommentId;   //评论id
+    private String messageAvatar;      //头像
+    private String messageSenderContent;  //消息内容
+    private LocalDateTime messageTime;   //时间
+    private String messageIsread;   //是否已读
+    private String messageType;     //消息类型
+    private int messageReplyerCommentId;   //消息回复评论id
+    private String messageReplyerId;       //消息回复者id
+    private String messageReplyerContent;   //消息回复者内容
+    private String messageIsyou;//      是否给你
 }

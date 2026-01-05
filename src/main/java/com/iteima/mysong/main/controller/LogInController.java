@@ -180,7 +180,7 @@ public class LogInController {
 //        } else {
 //            System.out.println("目录不存在或不是有效的目录");
 //        }
-        double durationWithFFmpeg = loginServiceimpl.getDurationWithFFmpeg("http://169.254.1.116:9000/mysong/first.mp3");
+        double durationWithFFmpeg = loginServiceimpl.getDurationWithFFmpeg("http://172.16.169.64:9000/mysong/first.mp3");
         System.out.println((int) durationWithFFmpeg);
         return Result.success();
     }

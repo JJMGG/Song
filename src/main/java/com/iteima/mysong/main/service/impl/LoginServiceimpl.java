@@ -73,7 +73,7 @@ public class LoginServiceimpl implements LoginService {
         for (Songs songs : TempList) {
             SongVo temp=new SongVo();
             BeanUtils.copyProperties(songs,temp);
-            temp.setSongSinger(loginMapper.getSingerName(songs.getSongSinger()));
+            temp.setSongSinger(loginMapper.getSingerName(songs.getSongSinger())+"-"+songs.getSongSinger());
             list.add(temp);
         }
         return list;

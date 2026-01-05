@@ -5,6 +5,7 @@ import com.iteima.mysong.common.Result;
 import com.iteima.mysong.pojo.Vo.MusicListVo;
 import com.iteima.mysong.pojo.Vo.RankSongVo;
 import com.iteima.mysong.pojo.Vo.SongListVo;
+import com.iteima.mysong.pojo.Vo.SongVo;
 import com.iteima.mysong.pojo.dto.MusicDto;
 import com.iteima.mysong.pojo.entity.Songs;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +55,10 @@ public class MyMusiController {
     }
 
    @GetMapping("/musics")
-    public  Result<List<Songs>> getMusics(@RequestParam Integer id,@RequestParam Integer userId)
+    public  Result<List<SongVo>> getMusics(@RequestParam Integer id, @RequestParam Integer userId)
    {
        log.info("id:{},userId:{}",id,userId);
-       List<Songs> list=myMusicService.getMusics(id,userId);
+       List<SongVo> list=myMusicService.getMusics(id,userId);
        return Result.success(list);
    }
 
@@ -91,9 +92,9 @@ public class MyMusiController {
 
 
    @GetMapping("/ranking")
-    public Result<List<Songs>> getRanking()
+    public Result<List<SongVo>> getRanking()
    {
-       List<Songs> list=myMusicService.getRanking();
+       List<SongVo> list=myMusicService.getRanking();
        return Result.success(list);
    }
 

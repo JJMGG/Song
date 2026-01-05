@@ -69,8 +69,9 @@ public class SongListServiceImpl implements SongListService {
         for (Integer i : list) {
             SongVo temp=new SongVo();
             Songs song=songListMapper.getSong(i);
+
             BeanUtils.copyProperties(song,temp);
-            temp.setSongSinger(loginMapper.getSingerName(song.getSongSinger()));
+            temp.setSongSinger(loginMapper.getSingerName(song.getSongSinger())+"-"+song.getSongSinger());
             ansList.add(temp);
 
         }
@@ -129,8 +130,6 @@ public class SongListServiceImpl implements SongListService {
 
     @Override
     public String saveCommnet(Comments comments) {
-
-
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime truncatedTime = now.truncatedTo(ChronoUnit.SECONDS);
         comments.setCommTime(truncatedTime);
